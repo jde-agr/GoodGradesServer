@@ -5,7 +5,7 @@
 version: 2.1
 orbs:
   heroku: circleci/heroku@0.0.10
-  puppeteer: threetreeslight/puppeteer@0.1.2
+  puppeteer: threetreeslight/puppeteer@0.1.2 # Need to enable 3rd party
 jobs:
   build:
     docker:
