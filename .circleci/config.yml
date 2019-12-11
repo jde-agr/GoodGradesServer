@@ -35,3 +35,10 @@ jobs:
 
       # # run tests!
       # - run: npm test
+    deploy:
+      steps:
+        - checkout
+        - run:
+            name: Deploy Master to Heroku
+            command: |
+              git push https://git.heroku.com/good-grades-server.git master
