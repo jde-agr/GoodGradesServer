@@ -5,6 +5,7 @@
 version: 2.1
 orbs:
   heroku: circleci/heroku@0.0.10
+  puppeteer: threetreeslight/puppeteer@0.1.2
 jobs:
   build:
     docker:
