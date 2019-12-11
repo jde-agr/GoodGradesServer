@@ -46,7 +46,6 @@ jobs:
           only-branch: master
 
 workflows:
-  version: 2
   build-deploy:
     jobs:
       - build
