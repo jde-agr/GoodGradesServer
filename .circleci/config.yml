@@ -2,7 +2,9 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
+orbs:
+  heroku: circleci/heroku@1.0.0
 jobs:
   build:
     docker:
@@ -36,14 +38,12 @@ jobs:
       # # run tests!
       # - run: npm test
   deploy:
-    docker:
-      - image: buildpack-deps:trusty
+    executor: heroku/default
     steps:
       - checkout
-      - run:
-          name: Deploy Master to Heroku
-          command: |
-            git push https://git.heroku.com/good-grades-server.git master
+      - heroku/install
+      - heroku/deploy-via-git:
+          only-branch: master
 
 workflows:
   version: 2
@@ -53,6 +53,3 @@ workflows:
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              only: master
