@@ -6,7 +6,12 @@ router.get('/rooms', (req, res) => {
     var room_name = "";
     var room_code = "";
     (async() => {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            args: [
+              '--no-sandbox',
+              '--disable-setuid-sandbox',
+            ],
+        });
         const page = await browser.newPage();
         console.log(await browser.version());
         await page.goto('https://room.sh/go', {waitUntil: 'networkidle0'});
