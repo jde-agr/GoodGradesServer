@@ -3,7 +3,7 @@ router = express.Router();
 const puppeteer = require('puppeteer');
 const fetch = require('isomorphic-fetch')
 const GRAPHQL_API = `http://localhost:5000/graphql`;
-const Room = require('../models/Room')
+const Room = require('../models/Room');
 
 const default_fields = `
 email
