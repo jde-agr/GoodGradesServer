@@ -6,12 +6,13 @@ const db = require('./db').db;
 const cors = require('cors');
 
 const Room = require('./models/Room');
+const User = require('./models/User');
 
 const { schema } = require('./schema/index');
 
 app.use(bodyParser.json());
 
-var whitelist = ['http://localhost:5000']
+var whitelist = ['http://localhost:3000', 'http://localhost:5000']
 var corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -26,7 +27,7 @@ app.use(cors(corsOptions));
 app.use('/graphql', bodyParser.json(), graphqlHttp({
     schema: schema,
     context: {
-        Room
+        Room, User
     },
     graphiql: true
 }));
@@ -41,5 +42,5 @@ app.get('/', (req, res, next) => {
     res.sendFile('views/index.html', { root: '.' });
 });
 
-const roomRoute = require('./api/room.js')
-app.use('/api', roomRoute)
+const apiRoutes = require('./api/index')
+app.use('/api', apiRoutes.room, apiRoutes.user)
