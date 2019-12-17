@@ -53,8 +53,11 @@ router.get('/users/:email', async (req, res) => {
                 'content-type': 'application/json'
             }
         }).then(async response => { return await response.json() })
-        // console.log(ans.data.getUser)
-        res.send(ans.data.getUser);
+        if (ans.data.getUser) {
+            res.send(ans.data.getUser);
+        } else {
+            res.send({});
+        }
     }
 })
 
@@ -91,7 +94,11 @@ router.get('/users/:email/room', async (req, res) => {
             }
             return await newObj;
         })
-        res.send(ans);
+        if (ans) {
+            res.send(ans);
+        } else {
+            res.send({});
+        }
     }
 })
 

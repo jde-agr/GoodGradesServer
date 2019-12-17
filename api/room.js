@@ -53,7 +53,11 @@ router.get('/rooms/:email', async (req, res) => {
                 'content-type': 'application/json'
             }
         }).then(async response => { return await response.json() })
-        res.send(ans.data.getRoom);
+        if (ans.data.getRoom) {
+            res.send(ans.data.getRoom);
+        } else {
+            res.send({});
+        }
     }
 })
 
