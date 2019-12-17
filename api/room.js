@@ -63,7 +63,7 @@ router.post('/rooms/createRoom', async (req, res) => {
         let existingEmail = await Room.findOne({ email: `${objee.email}` })
         console.log(existingEmail)
         if (!existingEmail) {
-            var room_name = "";
+            var room_url = "";
             var room_code = "";
             (async () => {
                 const browser = await puppeteer.launch({

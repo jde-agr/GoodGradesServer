@@ -3,7 +3,7 @@ router = express.Router();
 const puppeteer = require('puppeteer');
 const fetch = require('isomorphic-fetch');
 const GRAPHQL_API = `http://localhost:5000/graphql`;
-const Room = require('../models/Room');
+const User = require('../models/User');
 
 const default_fields = `
 email
@@ -86,10 +86,10 @@ router.get('/users/:email/room', async (req, res) => {
             // console.log(result)
             let newObj = await result.data.getUser;
             if (result.data.getRoom) {
-                newObj.room_url = result.data.getRoom.room_url;
-                newObj.room_code = result.data.getRoom.room_code;
+                newObj.room_url = await result.data.getRoom.room_url;
+                newObj.room_code = await result.data.getRoom.room_code;
             }
-            return await newObj
+            return await newObj;
         })
         res.send(ans);
     }
@@ -98,7 +98,7 @@ router.get('/users/:email/room', async (req, res) => {
 router.post('/users/createUser', async (req, res) => {
     const objee = req.body;
     if (objee.email && objee.username && objee.type) {
-        let existingEmail = await Room.findOne({ email: `${objee.email}` })
+        let existingEmail = await User.findOne({ email: `${objee.email}` })
         console.log(existingEmail)
         if (!existingEmail) {
             if (objee.type === "tutor") {
@@ -144,13 +144,13 @@ router.post('/users/createUser', async (req, res) => {
                         headers: {
                             'content-type': 'application/json'
                         }
-                    }).then(response => response.json())).then(result => {
-                        // console.log(result)
-                        let newObj = result.data.createUser;
-                        newObj.room_url = result.data.createRoom.room_url;
-                        newObj.room_code = result.data.createRoom.room_code;
-                        if (result.data.createRoom) {
-                            res.send(newObj)
+                    }).then(async response => await response.json())).then(async result => {
+                        // console.log(result);
+                        let newObj = await result.data.createUser;
+                        if (await result.data.createRoom) {
+                            newObj.room_url = await result.data.createRoom.room_url;
+                            newObj.room_code = await result.data.createRoom.room_code;
+                            res.send(await newObj);
                         } else {
                             res.send({ message: "Failed to add Room" })
                         }
