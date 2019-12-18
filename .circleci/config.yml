@@ -38,6 +38,7 @@ jobs:
             echo MONGO_PASSWORD=${MONGO_PASSWORD} >> ./.env
             echo MONGO_URI=${MONGO_URI} >> ./.env
             ls -la
+            cat ./.env
 
       - puppeteer/install
       # - run:
