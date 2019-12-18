@@ -35,6 +35,11 @@ jobs:
 
       - run: npm install && sudo apt-get update
 
+      - run: 
+        name: Testing ENV echo
+        command: |
+          echo $MONGO_USER
+
       - puppeteer/install
       # - run:
       #     name: Install puppeteer dependencies
