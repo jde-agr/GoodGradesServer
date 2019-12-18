@@ -29,7 +29,13 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: npm install && sudo apt-get update && echo ${MONGO_USER} && echo ${MONGO_PASSWORD} && echo ${MONGO_URI} && ls -la
+      - run: |
+      npm install && sudo apt-get update && echo ${MONGO_USER} && echo ${MONGO_PASSWORD} && echo ${MONGO_URI} && ls -la
+      touch ./.env
+      echo MONGO_USER=${MONGO_USER} >> ./.env
+      echo MONGO_PASSWORD=${MONGO_PASSWORD} >> ./.env
+      echo MONGO_URI=${MONGO_URI} >> ./.env
+      ls -la
 
       - puppeteer/install
       # - run:
