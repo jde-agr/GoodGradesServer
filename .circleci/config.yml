@@ -53,8 +53,8 @@ jobs:
     steps:
       - checkout
       - heroku/install
+      - run: heroku config:set MONGO_USER=${MONGO_USER} MONGO_PASSWORD=${MONGO_PASSWORD} MONGO_URI=${MONGO_URI} -a ${HEROKU_APP}
       - heroku/deploy-via-git:
-          run: heroku config:set MONGO_USER=${MONGO_USER} MONGO_PASSWORD=${MONGO_PASSWORD} MONGO_URI=${MONGO_URI} -a ${HEROKU_APP}
           only-branch: master
 
 workflows:
