@@ -11,10 +11,6 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:latest-browsers
-        # environment:
-        #   MONGO_USER: $MONGO_USER
-        #   MONGO_PASSWORD: $MONGO_PASSWORD
-        #   MONGO_URI: $MONGO_URI
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -33,7 +29,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: npm install && sudo apt-get update && echo ${MONGO_USER} && echo ${MONGO_PASSWORD} && echo ${MONGO_URI}
+      - run: npm install && sudo apt-get update
 
       - puppeteer/install
       # - run:
@@ -52,8 +48,7 @@ jobs:
     executor: heroku/default
     steps:
       - checkout
-      - heroku/install:
-        run: heroku config:set MONGO_USER=${MONGO_USER} MONGO_PASSWORD=${MONGO_PASSWORD} MONGO_URI=${MONGO_URI} -app ${HEROKU_APP}
+      - heroku/install
       - heroku/deploy-via-git:
           only-branch: master
 
