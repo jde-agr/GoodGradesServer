@@ -58,6 +58,12 @@ jobs:
     steps:
       - checkout
       - heroku/install
+      - run:
+          name: "Setting ENV for HEROKU"
+          command: |
+            heroku config:set MONGO_USER=${MONGO_USER}
+            heroku config:set MONGO_PASSWORD=${MONGO_PASSWORD}
+            heroku config:set MONGO_URI=${MONGO_URI}
       - heroku/deploy-via-git:
           only-branch: master
 
