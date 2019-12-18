@@ -13,7 +13,7 @@ const { schema } = require('./schema/index');
 
 app.use(bodyParser.json());
 
-var whitelist = ['http://localhost:3000', 'http://localhost:5000']
+var whitelist = ['http://localhost:3000', 'http://localhost:5000', `${process.env.DOMAIN_URL}`]
 var corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
