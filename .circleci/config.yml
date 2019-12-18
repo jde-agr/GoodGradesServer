@@ -12,9 +12,9 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:latest-browsers
         environment:
-          MONGO_USER: <%= ENV['MONGO_USER'] %>
-          MONGO_PASSWORD: <%= ENV['MONGO_PASSWORD'] %>
-          MONGO_URI: <%= ENV['MONGO_URI'] %>
+          MONGO_USER: $MONGO_USER
+          MONGO_PASSWORD: $MONGO_PASSWORD
+          MONGO_URI: $MONGO_URI
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
