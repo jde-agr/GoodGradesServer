@@ -12,7 +12,7 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:latest-browsers
 
-      environment:
+      - environment:
         MONGO_USER: <%= ENV['MONGO_USER'] %>
         MONGO_PASSWORD: <%= ENV['MONGO_PASSWORD'] %>
         MONGO_URI: <%= ENV['MONGO_URI'] %>
