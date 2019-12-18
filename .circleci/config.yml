@@ -33,7 +33,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: npm install && sudo apt-get update && echo ${MONGO_USER} && echo ${MONGO_PASSWORD} && echo ${MONGO_URI}
+      # - run: npm install && sudo apt-get update && echo ${MONGO_USER} && echo ${MONGO_PASSWORD} && echo ${MONGO_URI}
 
       - run:
           name: Update PATH and Define Environment Variable at Runtime
