@@ -15,5 +15,6 @@ extend type Query {
 
 extend type Mutation {
     createUser(email: String!, username: String!, type: String!) : User
+    deleteUser(email: String!) : User
 }
 `

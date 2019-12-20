@@ -14,5 +14,6 @@ type Query {
 
 type Mutation {
     createRoom(email: String!, room_url: String!, room_code: String!) : Room
+    deleteRoom(email: String!): Room
 }
 `

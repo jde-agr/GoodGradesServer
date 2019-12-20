@@ -19,6 +19,10 @@ exports.roomResolvers = {
                 room_code
             }).save();
             return newRoom;
+        },
+        deleteRoom : async (root, { email }, { Room }) => {
+            const deletedRoom = await Room.findOneAndRemove({ email });
+            return deletedRoom;
         }
     }
 }

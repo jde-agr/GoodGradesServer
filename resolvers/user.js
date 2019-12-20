@@ -19,6 +19,10 @@ exports.userResolvers = {
                 type
             }).save();
             return newUser;
+        },
+        deleteUser: async (root, { email }, { User }) => {
+            const deletedUser = await User.findOneAndRemove({ email });
+            return deletedUser
         }
     }
 }

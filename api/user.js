@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 const fetch = require('isomorphic-fetch');
 const GRAPHQL_API = "http://localhost:5000/graphql";
 const User = require('../models/User');
+const Room = require('../models/Room');
 
 const default_fields = `
 email
@@ -199,6 +200,72 @@ router.post('/users/createUser', async (req, res) => {
     }
     else
         res.send({ message: "Failed to add User. Require email, username and type." })
+})
+
+router.post('/users/deleteUser/:email', async (req, res) => {
+    objee = req.params;
+    if (objee.email) {
+        let existingEmail = await User.findOne({ email: `${objee.email}` })
+        console.log(existingEmail)
+        if (existingEmail) {
+            let existingRoom = await Room.findOne({ email: `${objee.email}` })
+            console.log(existingRoom)
+            let query = `
+                mutation($email: String!) {
+                    deleteUser(email: $email) {
+                        email
+                        username
+                        type
+                    }
+                }
+            `;
+            if (existingRoom) {
+                query = `
+                    mutation($email: String!) {
+                        deleteRoom(email: $email) {
+                            email
+                            room_url
+                            room_code
+                        }
+                        deleteUser(email: $email) {
+                            email
+                            username
+                            type
+                        }
+                    }
+                `;
+            }
+            const variables = `{ "email": "${objee.email}" }`;
+            return (fetch(GRAPHQL_API, {
+                method: 'POST',
+                body: JSON.stringify({
+                    query,
+                    variables
+                }),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(response => response.json())).then(result => {
+                // console.log(result)
+                if (result.data.deleteUser) {
+                    if (result.data.deleteRoom) {
+                        newObj = result.data.deleteUser;
+                        newObj.room_url = result.data.deleteRoom.room_url;
+                        newObj.room_code = result.data.deleteRoom.room_code;
+                        res.send(newObj);
+                    } else {
+                        res.send(result.data.deleteUser);
+                    }
+                } else {
+                    res.send({});
+                } 
+            })
+        } else {
+            res.send({});
+        }
+    } else {
+        res.send({});
+    }
 })
 
 module.exports = router;
