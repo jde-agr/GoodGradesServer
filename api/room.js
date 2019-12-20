@@ -2,7 +2,7 @@ const express = require('express');
 router = express.Router();
 const puppeteer = require('puppeteer');
 const fetch = require('isomorphic-fetch');
-const GRAPHQL_API = `${process.env.DOMAIN_URL}/graphql`;
+const GRAPHQL_API = "http://localhost:5000/graphql";
 const Room = require('../models/Room');
 
 const default_fields = `
@@ -58,6 +58,20 @@ router.get('/rooms/:email', async (req, res) => {
         } else {
             res.send({});
         }
+    }
+})
+
+router.get('/rooms/check/:room_code', async (req, res) => {
+    const objee = await req.params;
+    if (objee.room_code) {
+        const exstingRoom = await Room.findOne({ room_code: `${objee.room_code}` });
+        if (exstingRoom) {
+            res.send({ found: true});
+        } else {
+            res.send({ found: false});    
+        }
+    } else {
+        res.send({ found: false});
     }
 })
 
