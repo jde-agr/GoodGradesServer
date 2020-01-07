@@ -16,6 +16,10 @@ const EventSchema = new Schema({
     end_time: { // stored as ISO String
         type: String,
         required: true
+    },
+    booked: {
+        type: Boolean,
+        required: true
     }
 });
 

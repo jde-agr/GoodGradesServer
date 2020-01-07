@@ -6,16 +6,17 @@ type Event {
     students: [String]
     start_time: String!
     end_time: String!
+    booked: Boolean!
 }
 
 extend type Query {
-    getAllEvents(tutor: String, student: String) : [Event]
+    getAllEvents(tutor: String, student: String, booked: Boolean) : [Event]
     getEvent(tutor: String, start_time: String): Event
 }
 
 extend type Mutation {
     createEvent(tutor: String!, start_time: String!, end_time: String!) : Event
-    addStudentToEvent(tutor: String!, start_time: String!, student_email: String!) : Event
+    addStudentToEvent(tutor: String!, start_time: String!, student_id: String!) : Event
     deleteEvent(tutor: String!, start_time: String!): Event
 }
 `
