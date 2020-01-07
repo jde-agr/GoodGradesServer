@@ -7,7 +7,7 @@ const User = require('../models/User');
 const Room = require('../models/Room');
 
 const default_fields = `
-email
+unique_id
 username
 type
 `
@@ -33,17 +33,17 @@ router.get('/users', async (req, res) => {
     res.send(ans.data.getAllUsers);
 })
 
-router.get('/users/:email', async (req, res) => {
+router.get('/users/:unique_id', async (req, res) => {
     const objee = req.params;
-    if (objee.email) {
+    if (objee.unique_id) {
         const fields = ((objee && objee.fields) ? objee.fields : default_fields)
         const query = `
-            query($email: String!) {
-                getUser(email: $email){
+            query($unique_id: String!) {
+                getUser(unique_id: $unique_id){
                     ${fields}
                 }
             }`;
-        const variables = `{ "email" : "${objee.email}" }`
+        const variables = `{ "unique_id" : "${objee.unique_id}" }`
         const ans = await fetch(`${GRAPHQL_API}`, {
             method: 'POST',
             body: JSON.stringify({
@@ -62,21 +62,21 @@ router.get('/users/:email', async (req, res) => {
     }
 })
 
-router.get('/users/:email/room', async (req, res) => {
+router.get('/users/:unique_id/room', async (req, res) => {
     const objee = req.params;
-    if (objee.email) {
+    if (objee.unique_id) {
         const fields = ((objee && objee.fields) ? objee.fields : default_fields)
         const query = `
-            query($email: String!) {
-                getUser(email: $email){
+            query($unique_id: String!) {
+                getUser(unique_id: $unique_id){
                     ${fields}
                 }
-                getRoom(email: $email){
+                getRoom(unique_id: $unique_id){
                     room_url
                     room_code
                 }
             }`;
-        const variables = `{ "email" : "${objee.email}" }`
+        const variables = `{ "unique_id" : "${objee.unique_id}" }`
         const ans = await fetch(`${GRAPHQL_API}`, {
             method: 'POST',
             body: JSON.stringify({
@@ -105,10 +105,10 @@ router.get('/users/:email/room', async (req, res) => {
 
 router.post('/users/createUser', async (req, res) => {
     const objee = req.body;
-    if (objee.email && objee.username && objee.type) {
-        let existingEmail = await User.findOne({ email: `${objee.email}` })
-        console.log(existingEmail)
-        if (!existingEmail) {
+    if (objee.unique_id && objee.username && objee.type) {
+        let existingID = await User.findOne({ unique_id: `${objee.unique_id}` })
+        console.log(existingID)
+        if (!existingID) {
             if (objee.type === "tutor") {
                 let room_url = "";
                 let room_code = "";
@@ -128,20 +128,20 @@ router.post('/users/createUser', async (req, res) => {
                     console.log(await room_url);
                     await browser.close();
                     const query = `
-                        mutation($email: String!, $username: String!, $type: String!, $room_url: String!, $room_code: String!) {
-                            createUser(email: $email, username: $username, type: $type) {
-                                email
+                        mutation($unique_id: String!, $username: String!, $type: String!, $room_url: String!, $room_code: String!) {
+                            createUser(unique_id: $unique_id, username: $username, type: $type) {
+                                unique_id
                                 username
                                 type
                             }
-                            createRoom(email: $email, room_url: $room_url, room_code:$room_code) {
-                                email
+                            createRoom(unique_id: $unique_id, room_url: $room_url, room_code:$room_code) {
+                                unique_id
                                 room_url
                                 room_code
                             }
                         }
                     `;
-                    const variables = `{ "email": "${objee.email}", "username": "${objee.username}", "type": "${objee.type}", "room_url": "${room_url}", "room_code": "${room_code}" }`;
+                    const variables = `{ "unique_id": "${objee.unique_id}", "username": "${objee.username}", "type": "${objee.type}", "room_url": "${room_url}", "room_code": "${room_code}" }`;
                     // console.log(variables)
                     return (fetch(GRAPHQL_API, {
                         method: 'POST',
@@ -166,15 +166,15 @@ router.post('/users/createUser', async (req, res) => {
                 })().catch((e) => { console.log(e) });
             } else {
                 const query = `
-                    mutation($email: String!, $username: String!, $type: String!) {
-                        createUser(email: $email, username: $username, type: $type) {
-                            email
+                    mutation($unique_id: String!, $username: String!, $type: String!) {
+                        createUser(unique_id: $unique_id, username: $username, type: $type) {
+                            unique_id
                             username
                             type
                         }
                     }
                 `;
-                const variables = `{ "email": "${objee.email}", "username": "${objee.username}", "type": "${objee.type}" }`;
+                const variables = `{ "unique_id": "${objee.unique_id}", "username": "${objee.username}", "type": "${objee.type}" }`;
                 // console.log(variables)
                 return (fetch(GRAPHQL_API, {
                     method: 'POST',
@@ -195,25 +195,25 @@ router.post('/users/createUser', async (req, res) => {
                 })
             }
         } else {
-            res.send({ message: "Failed to add User. Email already exists." })
+            res.send({ message: "Failed to add User. Unique_id already exists." })
         }
     }
     else
-        res.send({ message: "Failed to add User. Require email, username and type." })
+        res.send({ message: "Failed to add User. Require unique_id, username and type." })
 })
 
-router.post('/users/deleteUser/:email', async (req, res) => {
+router.post('/users/deleteUser/:unique_id', async (req, res) => {
     objee = req.params;
-    if (objee.email) {
-        let existingEmail = await User.findOne({ email: `${objee.email}` })
-        console.log(existingEmail)
-        if (existingEmail) {
-            let existingRoom = await Room.findOne({ email: `${objee.email}` })
+    if (objee.unique_id) {
+        let existingID = await User.findOne({ unique_id: `${objee.unique_id}` })
+        console.log(existingID)
+        if (existingID) {
+            let existingRoom = await Room.findOne({ unique_id: `${objee.unique_id}` })
             console.log(existingRoom)
             let query = `
-                mutation($email: String!) {
-                    deleteUser(email: $email) {
-                        email
+                mutation($unique_id: String!) {
+                    deleteUser(unique_id: $unique_id) {
+                        unique_id
                         username
                         type
                     }
@@ -221,21 +221,21 @@ router.post('/users/deleteUser/:email', async (req, res) => {
             `;
             if (existingRoom) {
                 query = `
-                    mutation($email: String!) {
-                        deleteRoom(email: $email) {
-                            email
+                    mutation($unique_id: String!) {
+                        deleteRoom(unique_id: $unique_id) {
+                            unique_id
                             room_url
                             room_code
                         }
-                        deleteUser(email: $email) {
-                            email
+                        deleteUser(unique_id: $unique_id) {
+                            unique_id
                             username
                             type
                         }
                     }
                 `;
             }
-            const variables = `{ "email": "${objee.email}" }`;
+            const variables = `{ "unique_id": "${objee.unique_id}" }`;
             return (fetch(GRAPHQL_API, {
                 method: 'POST',
                 body: JSON.stringify({

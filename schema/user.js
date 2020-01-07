@@ -2,7 +2,7 @@ exports.userTypeDefs = `
 
 type User {
     _id: ID
-    email: String!
+    unique_id: String!
     username: String!
     type: String!
     room: Room
@@ -10,11 +10,11 @@ type User {
 
 extend type Query {
     getAllUsers : [User]
-    getUser(email: String!): User
+    getUser(unique_id: String!): User
 }
 
 extend type Mutation {
-    createUser(email: String!, username: String!, type: String!) : User
-    deleteUser(email: String!) : User
+    createUser(unique_id: String!, username: String!, type: String!) : User
+    deleteUser(unique_id: String!) : User
 }
 `

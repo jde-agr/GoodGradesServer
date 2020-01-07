@@ -7,7 +7,7 @@ const default_fields = `
 tutor
 students
 start_time
-duration
+end_time
 `
 
 router.get('/events', async (req, res) => {
@@ -91,18 +91,18 @@ router.get('/events/byStudent/:student', async (req, res) => {
 
 router.post('/events/createEvent', async (req, res) => {
     const objee = req.body;
-    if (objee.tutor && objee.start_time && objee.duration) {
+    if (objee.tutor && objee.start_time && objee.end_time) {
         const query = `
-        mutation($tutor: String!, $start_time: String!, $duration: Int!) {
-            createEvent(tutor: $tutor, start_time: $start_time, duration: $duration) {
+        mutation($tutor: String!, $start_time: String!, $end_time: String!) {
+            createEvent(tutor: $tutor, start_time: $start_time, end_time: $end_time) {
               tutor
               students
               start_time
-              duration
+              end_time
             }
         }
         `;
-        const variables = `{ "tutor": "${objee.tutor}", "start_time": "${objee.start_time}", "duration": ${objee.duration} }`;
+        const variables = `{ "tutor": "${objee.tutor}", "start_time": "${objee.start_time}", "end_time": "${objee.end_time}" }`;
         const ans = await fetch(GRAPHQL_API, {
             method: 'POST',
             body: JSON.stringify({
@@ -120,7 +120,7 @@ router.post('/events/createEvent', async (req, res) => {
         }
     }
     else
-        res.send({ message: "Failed to add Event. Require tutor, start_time and duration." })
+        res.send({ message: "Failed to add Event. Require tutor, start_time and end_time." })
 })
 
 router.post('/events/addStudentToEvent', async (req, res) => {
@@ -132,7 +132,7 @@ router.post('/events/addStudentToEvent', async (req, res) => {
               tutor
               students
               start_time
-              duration
+              end_time
             }
         }
         `;
@@ -166,7 +166,7 @@ router.post('/events/deleteEvent', async (req, res) => {
               tutor
               students
               start_time
-              duration
+              end_time
             }
         }
         `;

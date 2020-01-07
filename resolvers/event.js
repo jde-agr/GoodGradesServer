@@ -14,12 +14,12 @@ exports.eventResolvers = {
         }
     },
     Mutation: {
-        createEvent: async (root, { tutor, date, start_time, duration }, { Event }) => {
+        createEvent: async (root, { tutor, date, start_time, end_time }, { Event }) => {
             const newEvent = await new Event({
                 tutor,
                 date,
                 start_time,
-                duration
+                end_time
             }).save();
             return newEvent;
         },

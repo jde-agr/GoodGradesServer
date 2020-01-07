@@ -13,8 +13,8 @@ const EventSchema = new Schema({
         type : String,
         required: true
     },
-    duration: { // stored in seconds
-        type: Number,
+    end_time: { // stored as ISO String
+        type: String,
         required: true
     }
 });
