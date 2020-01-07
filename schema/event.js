@@ -9,7 +9,7 @@ type Event {
 }
 
 extend type Query {
-    getAllEvents(tutor: String) : [Event]
+    getAllEvents(tutor: String, student: String) : [Event]
     getEvent(tutor: String, start_time: String): Event
 }
 

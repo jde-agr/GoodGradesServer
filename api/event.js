@@ -31,7 +31,7 @@ router.get('/events', async (req, res) => {
     res.send(ans.data.getAllEvents);
 })
 
-router.get('/events/:tutor', async (req, res) => {
+router.get('/events/byTutor/:tutor', async (req, res) => {
     const objee = req.params;
     if (objee.tutor) {
         const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -55,7 +55,36 @@ router.get('/events/:tutor', async (req, res) => {
         if (ans.data.getAllEvents) {
             res.send(ans.data.getAllEvents);
         } else {
-            res.send({});
+            res.send([]);
+        }
+    }
+})
+
+router.get('/events/byStudent/:student', async (req, res) => {
+    const objee = req.params;
+    if (objee.student) {
+        const fields = ((objee && objee.fields) ? objee.fields : default_fields)
+        const query = `
+            query($student: String!) {
+                getAllEvents(student: $student){
+                    ${fields}
+                }
+            }`;
+        const variables = `{ "student" : "${objee.student}" }`
+        const ans = await fetch(`${GRAPHQL_API}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                query,
+                variables
+            }),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(async response => { return await response.json() })
+        if (ans.data.getAllEvents) {
+            res.send(ans.data.getAllEvents);
+        } else {
+            res.send([]);
         }
     }
 })
