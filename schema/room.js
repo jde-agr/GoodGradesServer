@@ -2,17 +2,18 @@ exports.roomTypeDefs = `
 
 type Room {
     _id: ID
-    email: String!
+    unique_id: String!
     room_url: String!
     room_code: String!
 }
 
 type Query {
     getAllRooms : [Room]
-    getRoom(email: String!): Room
+    getRoom(unique_id: String!): Room
 }
 
 type Mutation {
-    createRoom(email: String!, room_url: String!, room_code: String!) : Room
+    createRoom(unique_id: String!, room_url: String!, room_code: String!) : Room
+    deleteRoom(unique_id: String!): Room
 }
 `
