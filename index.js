@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 var whitelist = ['http://localhost:3000', 'http://localhost:5000', `${process.env.DOMAIN_URL}`, 'http://good-grades.herokuapp.com', 'https://good-grades.herokuapp.com', 'https://good-grades-dev.herokuapp.com']
 var corsOptions = {
     origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1 || origin || !origin) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true)
         } else {
             callback(new Error('Not allowed by CORS'))

@@ -1,7 +1,7 @@
 const express = require('express');
 router = express.Router();
 const fetch = require('isomorphic-fetch');
-const GRAPHQL_API = "http://localhost:5000/graphql";
+const GRAPHQL_API = `${process.env.DOMAIN_URL}/graphql`;
 const User = require('../models/User');
 
 const default_fields = `
