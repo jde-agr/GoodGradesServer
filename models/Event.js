@@ -20,8 +20,13 @@ const EventSchema = new Schema({
     booked: {
         type: Boolean,
         required: true
+    },
+    expireAt: {
+        type: Date,
+        required: true
     }
 });
 
 EventSchema.index({ tutor: 1, start_time: 1 }, { unique: true, name: "combo" });
+EventSchema.index({ expireAt : 1 }, { expireAfterSeconds: 0, unique: true });
 module.exports = mongoose.model('Event', EventSchema);

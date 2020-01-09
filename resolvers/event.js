@@ -21,7 +21,8 @@ exports.eventResolvers = {
                 date,
                 start_time,
                 end_time,
-                booked: false
+                booked: false,
+                expireAt : Date(end_time)
             }).save();
             return newEvent;
         },
