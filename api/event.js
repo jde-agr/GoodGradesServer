@@ -221,7 +221,42 @@ router.post('/events/addStudentToEvent', async (req, res) => {
         }
     }
     else
-        res.send({ message: "Failed to add Event. Require tutor, start_time and student_id." })
+        res.send({ message: "Failed to add Student to Event. Require tutor, start_time and student_id." })
+})
+
+router.post('/events/updateEvent', async (req, res) => {
+    const objee = req.body;
+    if (objee.tutor && objee.old_start_time && objee.new_start_time && objee.new_end_time) {
+        const query = `
+        mutation($tutor: String!, $old_start_time: String!, $new_start_time: String!, $new_end_time: String!) {
+            updateEvent(tutor: $tutor, old_start_time: $old_start_time, new_start_time: $new_start_time, new_end_time: $new_end_time) {
+              tutor
+              students
+              start_time
+              end_time
+              booked
+            }
+        }
+        `;
+        const variables = `{ "tutor": "${objee.tutor}", "old_start_time": "${objee.old_start_time}", "new_start_time": "${objee.new_start_time}", "new_end_time": "${objee.new_end_time}" }`;
+        const ans = await fetch(GRAPHQL_API, {
+            method: 'POST',
+            body: JSON.stringify({
+                query,
+                variables
+            }),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(response => response.json())
+        if (ans.data.updateEvent) {
+            res.send(ans.data.updateEvent);
+        } else {
+            res.send({ message: "Failed to update Event" })
+        }
+    }
+    else
+        res.send({ message: "Failed to update Event. Require tutor, old_start_time, new_start_time and new_end_time." })
 })
 
 router.post('/events/deleteEvent', async (req, res) => {

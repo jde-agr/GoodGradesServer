@@ -35,11 +35,24 @@ exports.eventResolvers = {
                     if (!newObj.students.includes(student_id)) {
                         newObj.students.push(student_id);
                         newObj.booked = true;
-                        event = Event.findOneAndUpdate({ tutor, start_time }, { $set: newObj }, { new: true });
+                        event = await Event.findOneAndUpdate({ tutor, start_time }, { $set: newObj }, { new: true });
                     }
                 }
             }
             return await event;
+        },
+        updateEvent: async (root, { tutor, old_start_time, old_end_time, new_start_time, new_end_time }, { Event }) => {
+            let updatedEvent = await Event.findOne({ tutor, start_time : old_start_time });
+            if (updatedEvent) {
+                let newObj = await { ...updatedEvent._doc }
+                // console.log("Old obj", newObj);
+                newObj.start_time = new_start_time;
+                newObj.end_time = new_end_time;
+                newObj.expireAt = new Date(new_end_time);
+                // console.log("New Obj", newObj)
+                updatedEvent = await Event.findOneAndUpdate({ tutor, start_time : old_start_time }, { $set: newObj }, { new: true });
+            }
+            return updatedEvent;
         },
         deleteEvent: async (root, { tutor, start_time }, { Event }) => {
             const deletedEvent = await Event.findOneAndRemove({ tutor, start_time });

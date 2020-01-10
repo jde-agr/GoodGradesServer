@@ -17,6 +17,7 @@ extend type Query {
 extend type Mutation {
     createEvent(tutor: String!, start_time: String!, end_time: String!) : Event
     addStudentToEvent(tutor: String!, start_time: String!, student_id: String!) : Event
+    updateEvent(tutor: String!, old_start_time: String!, new_start_time: String!, new_end_time: String!) : Event
     deleteEvent(tutor: String!, start_time: String!): Event
 }
 `
