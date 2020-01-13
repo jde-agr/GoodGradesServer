@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const User = require('./User')
+const UserSchema = mongoose.model('User').schema;
 
 const EventSchema = new Schema({
     tutor: {
         type: String,
         required: true
     },
-    students: [{
-        type: String
-    }],
+    students: [Object],
     start_time: { // stored as ISO String
         type : String,
         required: true

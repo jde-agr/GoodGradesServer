@@ -1,12 +1,15 @@
 const express = require('express');
 router = express.Router();
 const fetch = require('isomorphic-fetch');
-const GRAPHQL_API = `${process.env.DOMAIN_URL}/graphql`;
+const GRAPHQL_API = `http://localhost:5000/graphql`;
 const User = require('../models/User');
 
 const default_fields = `
 tutor
-students
+students {
+    unique_id
+    username
+}
 start_time
 end_time
 booked
@@ -158,7 +161,10 @@ router.post('/events/createEvent', async (req, res) => {
             mutation($tutor: String!, $start_time: String!, $end_time: String!) {
                 createEvent(tutor: $tutor, start_time: $start_time, end_time: $end_time) {
                   tutor
-                  students
+                  students {
+                      unique_id
+                      username
+                  }
                   start_time
                   end_time
                   booked

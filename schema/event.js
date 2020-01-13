@@ -3,7 +3,7 @@ exports.eventTypeDefs = `
 type Event {
     _id: ID
     tutor: String!
-    students: [String]
+    students: [User]
     start_time: String!
     end_time: String!
     booked: Boolean!

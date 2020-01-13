@@ -26,15 +26,18 @@ exports.eventResolvers = {
             }).save();
             return newEvent;
         },
-        addStudentToEvent: async (root, { tutor, start_time, student_id }, { Event }) => {
+        addStudentToEvent: async (root, { tutor, start_time, student_id }, { Event, User }) => {
             let event = await Event.findOne({ tutor, start_time });
+            let student = await User.findOne({ unique_id : student_id});
             if (event) {
                 let newObj = await { ...event._doc }
-                console.log(newObj)
                 if (!newObj.booked) {
-                    if (!newObj.students.includes(student_id)) {
-                        newObj.students.push(student_id);
-                        newObj.booked = true;
+                    console.log("NO BOOKING", student)
+                    if (newObj.students.length == 0 || newObj.students.filter(data => (data.unique_id == student_id)).length == 0) {
+                        console.log("NO PRIOR")
+                        console.log(newObj)
+                        newObj.students.push(JSON.parse(`{ "unique_id" : "${student.unique_id}", "username" : "${student.username}", "type" : "${student.type}" }`))
+                        console.log(newObj)
                         event = await Event.findOneAndUpdate({ tutor, start_time }, { $set: newObj }, { new: true });
                     }
                 }
