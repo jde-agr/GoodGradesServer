@@ -103,6 +103,27 @@ router.get('/users/:unique_id/room', async (req, res) => {
     }
 })
 
+router.get('/users/tutor/getAllTutors', async (req, res) => {
+    const objee = req.query;
+    const fields = ((objee && objee.fields) ? objee.fields : default_fields)
+    const query = `
+        query {
+            getAllTutors {
+                ${fields}
+            }
+        }`;
+    const ans = await fetch(`${GRAPHQL_API}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            query
+        }),
+        headers: {
+            'content-type': 'application/json'
+        }
+    }).then(async response => { return await response.json() })
+    res.send(ans.data.getAllTutors);
+})
+
 router.post('/users/createUser', async (req, res) => {
     const objee = req.body;
     if (objee.unique_id && objee.username && objee.type) {

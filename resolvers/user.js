@@ -1,12 +1,16 @@
 exports.userResolvers = {
     Query: {
         getAllUsers: async (root, args, { User }) => {
-            const allUsers = await User.find().sort({ unique_id: "asc" })
+            const allUsers = await User.find().sort({ unique_id: "asc" });
             return await allUsers;
         },
         getUser: async (root, { unique_id }, { User }) => {
-            const user = await User.findOne({ unique_id })
+            const user = await User.findOne({ unique_id });
             return await user;
+        },
+        getAllTutors: async (root, args , { User }) => {
+            const tutors = await User.find({ type : "tutor" });
+            return await tutors;
         }
     },
     Mutation: {
@@ -22,7 +26,7 @@ exports.userResolvers = {
         },
         deleteUser: async (root, { unique_id }, { User }) => {
             const deletedUser = await User.findOneAndRemove({ unique_id });
-            return deletedUser
+            return deletedUser;
         }
     }
 }

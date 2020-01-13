@@ -11,6 +11,7 @@ type User {
 extend type Query {
     getAllUsers : [User]
     getUser(unique_id: String!): User
+    getAllTutors: [User]
 }
 
 extend type Mutation {
