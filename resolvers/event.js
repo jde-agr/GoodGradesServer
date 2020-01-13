@@ -15,15 +15,16 @@ exports.eventResolvers = {
         }
     },
     Mutation: {
-        createEvent: async (root, { tutor, date, start_time, end_time }, { Event }) => {
+        createEvent: async (root, { tutor, start_time, end_time }, { Event }) => {
             const newEvent = await new Event({
                 tutor,
-                date,
+                students : [],
                 start_time,
                 end_time,
                 booked: false,
                 expireAt : new Date(end_time)
             }).save();
+            // console.log(newEvent)
             return newEvent;
         },
         addStudentToEvent: async (root, { tutor, start_time, student_id }, { Event, User }) => {
@@ -37,6 +38,7 @@ exports.eventResolvers = {
                         console.log("NO PRIOR")
                         console.log(newObj)
                         newObj.students.push(JSON.parse(`{ "unique_id" : "${student.unique_id}", "username" : "${student.username}", "type" : "${student.type}" }`))
+                        newObj.booked = true;
                         console.log(newObj)
                         event = await Event.findOneAndUpdate({ tutor, start_time }, { $set: newObj }, { new: true });
                     }
