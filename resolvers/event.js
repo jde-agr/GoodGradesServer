@@ -3,7 +3,7 @@ exports.eventResolvers = {
         getAllEvents: async (root, args, { Event }) => {
             let query = [];
             args.tutor ? query.push('"tutor": "' + args.tutor + '"') : 0;
-            args.student ? query.push('"students": "' + args.student + '"') : 0;
+            args.student ? query.push('"students": { "$elemMatch": { "unique_id": "' + args.student + '" } }') : 0;
             (args.booked == true) ? query.push('"booked": true') : (args.booked == false) ? query.push('"booked": false') : 0;
             let obj = JSON.parse('{ ' + query.toString() + ' }');
             const allEvents = await Event.find(obj).sort({ tutor: "asc", start_time: "asc" });
