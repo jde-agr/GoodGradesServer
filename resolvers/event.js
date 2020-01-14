@@ -24,7 +24,6 @@ exports.eventResolvers = {
                 booked: false,
                 expireAt : new Date(end_time)
             }).save();
-            // console.log(newEvent)
             return newEvent;
         },
         addStudentToEvent: async (root, { tutor, start_time, student_id }, { Event, User }) => {
@@ -33,13 +32,9 @@ exports.eventResolvers = {
             if (event && student) {
                 let newObj = await { ...event._doc }
                 if (!newObj.booked) {
-                    // console.log("NO BOOKING", student)
                     if (newObj.students.length == 0 || newObj.students.filter(data => (data.unique_id == student_id)).length == 0) {
-                        // console.log("NO PRIOR")
-                        // console.log(newObj)
                         newObj.students.push(JSON.parse(`{ "unique_id" : "${student.unique_id}", "username" : "${student.username}", "type" : "${student.type}" }`))
                         newObj.booked = true;
-                        // console.log(newObj)
                         event = await Event.findOneAndUpdate({ tutor, start_time }, { $set: newObj }, { new: true });
                     }
                 }
