@@ -36,6 +36,27 @@ router.get('/events', async (req, res) => {
     res.send(ans.data.getAllEvents);
 })
 
+router.get('/events/available', async (req, res) => {
+    const objee = req.query;
+    const fields = ((objee && objee.fields) ? objee.fields : default_fields)
+    const query = `
+        query {
+            getAllEvents(booked: false) {
+                ${fields}
+            }
+        }`;
+    const ans = await fetch(`${GRAPHQL_API}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            query
+        }),
+        headers: {
+            'content-type': 'application/json'
+        }
+    }).then(async response => { return await response.json() })
+    res.send(ans.data.getAllEvents);
+})
+
 router.get('/events/byTutor/:tutor', async (req, res) => {
     const objee = req.params;
     if (objee.tutor) {
