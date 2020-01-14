@@ -6,9 +6,7 @@ const EventSchema = new Schema({
         type: String,
         required: true
     },
-    students: [{
-        type: String
-    }],
+    students: [Object],
     start_time: { // stored as ISO String
         type : String,
         required: true
@@ -28,5 +26,5 @@ const EventSchema = new Schema({
 });
 
 EventSchema.index({ tutor: 1, start_time: 1 }, { unique: true, name: "combo" });
-EventSchema.index({ expireAt : 1 }, { expireAfterSeconds: 0, unique: true });
+EventSchema.index({ expireAt : 1 }, { expireAfterSeconds: 0 });
 module.exports = mongoose.model('Event', EventSchema);

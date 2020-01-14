@@ -6,7 +6,10 @@ const User = require('../models/User');
 
 const default_fields = `
 tutor
-students
+students {
+    unique_id
+    username
+}
 start_time
 end_time
 booked
@@ -158,7 +161,10 @@ router.post('/events/createEvent', async (req, res) => {
             mutation($tutor: String!, $start_time: String!, $end_time: String!) {
                 createEvent(tutor: $tutor, start_time: $start_time, end_time: $end_time) {
                   tutor
-                  students
+                  students {
+                      unique_id
+                      username
+                  }
                   start_time
                   end_time
                   booked
@@ -196,7 +202,10 @@ router.post('/events/addStudentToEvent', async (req, res) => {
         mutation($tutor: String!, $start_time: String!, $student_id: String!) {
             addStudentToEvent(tutor: $tutor, start_time: $start_time, student_id: $student_id) {
               tutor
-              students
+              students {
+                  unique_id
+                  username
+              }
               start_time
               end_time
               booked
@@ -231,7 +240,10 @@ router.post('/events/updateEvent', async (req, res) => {
         mutation($tutor: String!, $old_start_time: String!, $new_start_time: String!, $new_end_time: String!) {
             updateEvent(tutor: $tutor, old_start_time: $old_start_time, new_start_time: $new_start_time, new_end_time: $new_end_time) {
               tutor
-              students
+              students {
+                  unique_id
+                  username
+              }
               start_time
               end_time
               booked
@@ -266,7 +278,10 @@ router.post('/events/deleteEvent', async (req, res) => {
         mutation($tutor: String!, $start_time: String!) {
             deleteEvent(tutor: $tutor, start_time: $start_time) {
               tutor
-              students
+              students {
+                  unique_id
+                  username
+              }
               start_time
               end_time
             }

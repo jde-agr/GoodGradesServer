@@ -15,26 +15,31 @@ exports.eventResolvers = {
         }
     },
     Mutation: {
-        createEvent: async (root, { tutor, date, start_time, end_time }, { Event }) => {
+        createEvent: async (root, { tutor, start_time, end_time }, { Event }) => {
             const newEvent = await new Event({
                 tutor,
-                date,
+                students : [],
                 start_time,
                 end_time,
                 booked: false,
                 expireAt : new Date(end_time)
             }).save();
+            // console.log(newEvent)
             return newEvent;
         },
-        addStudentToEvent: async (root, { tutor, start_time, student_id }, { Event }) => {
+        addStudentToEvent: async (root, { tutor, start_time, student_id }, { Event, User }) => {
             let event = await Event.findOne({ tutor, start_time });
-            if (event) {
+            let student = await User.findOne({ unique_id : student_id});
+            if (event && student) {
                 let newObj = await { ...event._doc }
-                console.log(newObj)
                 if (!newObj.booked) {
-                    if (!newObj.students.includes(student_id)) {
-                        newObj.students.push(student_id);
+                    // console.log("NO BOOKING", student)
+                    if (newObj.students.length == 0 || newObj.students.filter(data => (data.unique_id == student_id)).length == 0) {
+                        // console.log("NO PRIOR")
+                        // console.log(newObj)
+                        newObj.students.push(JSON.parse(`{ "unique_id" : "${student.unique_id}", "username" : "${student.username}", "type" : "${student.type}" }`))
                         newObj.booked = true;
+                        // console.log(newObj)
                         event = await Event.findOneAndUpdate({ tutor, start_time }, { $set: newObj }, { new: true });
                     }
                 }
