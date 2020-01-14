@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const User = require('./User')
-const UserSchema = mongoose.model('User').schema;
 
 const EventSchema = new Schema({
     tutor: {
@@ -28,5 +26,5 @@ const EventSchema = new Schema({
 });
 
 EventSchema.index({ tutor: 1, start_time: 1 }, { unique: true, name: "combo" });
-EventSchema.index({ expireAt : 1 }, { expireAfterSeconds: 0, unique: true });
+EventSchema.index({ expireAt : 1 }, { expireAfterSeconds: 0 });
 module.exports = mongoose.model('Event', EventSchema);
