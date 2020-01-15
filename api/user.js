@@ -2,7 +2,8 @@ const express = require('express');
 router = express.Router();
 const puppeteer = require('puppeteer');
 const fetch = require('isomorphic-fetch');
-const GRAPHQL_API = `${process.env.DOMAIN_URL}/graphql`;
+// const GRAPHQL_API = `${process.env.DOMAIN_URL}/graphql`;
+const GRAPHQL_API = `http://localhost:5000/graphql`;
 const User = require('../models/User');
 const Room = require('../models/Room');
 
@@ -110,6 +111,37 @@ router.get('/users/tutor/getAllTutors', async (req, res) => {
         query {
             getAllTutors {
                 ${fields}
+            }
+        }`;
+    const ans = await fetch(`${GRAPHQL_API}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            query
+        }),
+        headers: {
+            'content-type': 'application/json'
+        }
+    }).then(async response => { return await response.json() })
+    res.send(ans.data.getAllTutors);
+})
+
+router.get('/users/tutor/getAllTutors/events', async (req, res) => {
+    const objee = req.query;
+    const fields = ((objee && objee.fields) ? objee.fields : default_fields)
+    const query = `
+        query {
+            getAllTutors(events: true) {
+                ${fields}
+                events {
+                    tutor
+                    students {
+                      unique_id
+                      username
+                    }
+                    start_time
+                    end_time
+                    booked
+                }
             }
         }`;
     const ans = await fetch(`${GRAPHQL_API}`, {

@@ -6,12 +6,13 @@ type User {
     username: String!
     type: String!
     room: Room
+    events: [Event]
 }
 
 extend type Query {
     getAllUsers : [User]
     getUser(unique_id: String!): User
-    getAllTutors: [User]
+    getAllTutors(events: Boolean): [User]
 }
 
 extend type Mutation {

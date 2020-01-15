@@ -8,8 +8,16 @@ exports.userResolvers = {
             const user = await User.findOne({ unique_id });
             return await user;
         },
-        getAllTutors: async (root, args , { User }) => {
+        getAllTutors: async (root, args , { User, Event }) => {
             const tutors = await User.find({ type : "tutor" });
+            const allEvents = (args.events == true) ? await Event.find().sort({ tutor: "asc" }) : null;
+            if (allEvents) {
+                tutors.forEach((elem) => {
+                    elem.events = (allEvents.filter((elem2) => {
+                        return (elem.unique_id == elem2.tutor);
+                    }))
+                })
+            }
             return await tutors;
         }
     },
