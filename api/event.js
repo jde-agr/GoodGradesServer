@@ -6,6 +6,7 @@ const User = require('../models/User');
 
 const default_fields = `
 tutor
+tutor_username
 students {
     unique_id
     username

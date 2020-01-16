@@ -6,6 +6,10 @@ const EventSchema = new Schema({
         type: String,
         required: true
     },
+    tutor_username: {
+        type: String,
+        required: true
+    },
     students: [Object],
     start_time: { // stored as ISO String
         type : String,

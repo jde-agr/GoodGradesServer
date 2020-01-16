@@ -15,16 +15,21 @@ exports.eventResolvers = {
         }
     },
     Mutation: {
-        createEvent: async (root, { tutor, start_time, end_time }, { Event }) => {
-            const newEvent = await new Event({
-                tutor,
-                students : [],
-                start_time,
-                end_time,
-                booked: false,
-                expireAt : new Date(end_time)
-            }).save();
-            return newEvent;
+        createEvent: async (root, { tutor, start_time, end_time }, { Event, User }) => {
+            const tutorDetails = await User.findOne({ unique_id : tutor });
+            if (tutorDetails) {
+                const newEvent = await new Event({
+                    tutor,
+                    tutor_username : tutorDetails.username,
+                    students : [],
+                    start_time,
+                    end_time,
+                    booked: false,
+                    expireAt : new Date(end_time)
+                }).save();
+                return newEvent;
+            }
+            return null;
         },
         addStudentToEvent: async (root, { tutor, start_time, student_id }, { Event, User }) => {
             let event = await Event.findOne({ tutor, start_time });

@@ -3,6 +3,7 @@ exports.eventTypeDefs = `
 type Event {
     _id: ID
     tutor: String!
+    tutor_username: String!
     students: [User]
     start_time: String!
     end_time: String!
