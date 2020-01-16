@@ -133,9 +133,11 @@ router.get('/users/tutor/getAllTutors/events', async (req, res) => {
                 ${fields}
                 events {
                     tutor
+                    tutor_username
+                    room_code
                     students {
-                      unique_id
-                      username
+                        unique_id
+                        username
                     }
                     start_time
                     end_time

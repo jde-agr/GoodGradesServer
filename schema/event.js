@@ -4,6 +4,7 @@ type Event {
     _id: ID
     tutor: String!
     tutor_username: String!
+    room_code: String!
     students: [User]
     start_time: String!
     end_time: String!

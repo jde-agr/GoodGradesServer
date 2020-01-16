@@ -10,6 +10,10 @@ const EventSchema = new Schema({
         type: String,
         required: true
     },
+    room_code: {
+        type: String,
+        required: true
+    },
     students: [Object],
     start_time: { // stored as ISO String
         type : String,

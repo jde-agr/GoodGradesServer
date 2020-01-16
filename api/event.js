@@ -7,6 +7,7 @@ const User = require('../models/User');
 const default_fields = `
 tutor
 tutor_username
+room_code
 students {
     unique_id
     username
@@ -184,6 +185,7 @@ router.post('/events/createEvent', async (req, res) => {
                 createEvent(tutor: $tutor, start_time: $start_time, end_time: $end_time) {
                   tutor
                   tutor_username
+                  room_code
                   students {
                       unique_id
                       username
@@ -226,6 +228,7 @@ router.post('/events/addStudentToEvent', async (req, res) => {
             addStudentToEvent(tutor: $tutor, start_time: $start_time, student_id: $student_id) {
               tutor
               tutor_username
+              room_code
               students {
                   unique_id
                   username
@@ -265,6 +268,7 @@ router.post('/events/updateEvent', async (req, res) => {
             updateEvent(tutor: $tutor, old_start_time: $old_start_time, new_start_time: $new_start_time, new_end_time: $new_end_time) {
               tutor
               tutor_username
+              room_code
               students {
                   unique_id
                   username
@@ -304,6 +308,7 @@ router.post('/events/deleteEvent', async (req, res) => {
             deleteEvent(tutor: $tutor, start_time: $start_time) {
               tutor
               tutor_username
+              room_code
               students {
                   unique_id
                   username

@@ -15,12 +15,14 @@ exports.eventResolvers = {
         }
     },
     Mutation: {
-        createEvent: async (root, { tutor, start_time, end_time }, { Event, User }) => {
+        createEvent: async (root, { tutor, start_time, end_time }, { Event, User, Room }) => {
             const tutorDetails = await User.findOne({ unique_id : tutor });
-            if (tutorDetails) {
+            const roomDetails = await Room.findOne({ unique_id : tutor });
+            if (tutorDetails && roomDetails) {
                 const newEvent = await new Event({
                     tutor,
                     tutor_username : tutorDetails.username,
+                    room_code : roomDetails.room_code,
                     students : [],
                     start_time,
                     end_time,
