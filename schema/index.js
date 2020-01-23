@@ -6,8 +6,10 @@ const { userTypeDefs } = require('./user');
 const { userResolvers } = require('../resolvers/user');
 const { eventTypeDefs } = require('./event');
 const { eventResolvers } = require('../resolvers/event');
+const { quickHelpTypeDefs } = require('./quickHelp');
+const { quickHelpResolvers } = require('../resolvers/quickHelp');
 
 exports.schema = makeExecutableSchema({
-    typeDefs: [roomTypeDefs, userTypeDefs, eventTypeDefs],
-    resolvers: [roomResolvers, userResolvers, eventResolvers]
+    typeDefs: [roomTypeDefs, userTypeDefs, eventTypeDefs, quickHelpTypeDefs],
+    resolvers: [roomResolvers, userResolvers, eventResolvers, quickHelpResolvers]
 });

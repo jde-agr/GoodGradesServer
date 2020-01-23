@@ -9,6 +9,7 @@ const cors = require('cors');
 const Room = require('./models/Room');
 const User = require('./models/User');
 const Event = require('./models/Event');
+const QuickHelp = require('./models/QuickHelp');
 
 const { schema } = require('./schema/index');
 
@@ -29,7 +30,7 @@ app.use(cors(corsOptions));
 app.use('/graphql', bodyParser.json(), graphqlHttp({
     schema: schema,
     context: {
-        Room, User, Event
+        Room, User, Event, QuickHelp
     },
     graphiql: true
 }));
@@ -45,4 +46,4 @@ app.get('/', (req, res, next) => {
 });
 
 const apiRoutes = require('./api/index')
-app.use('/api', apiRoutes.room, apiRoutes.user, apiRoutes.event)
+app.use('/api', apiRoutes.room, apiRoutes.user, apiRoutes.event, apiRoutes.quickHelp)
