@@ -19,7 +19,8 @@
     "graphql-tools": "^4.0.6",
     "isomorphic-fetch": "^2.2.1",
     "mongoose": "^5.8.0",
-    "puppeteer": "^2.0.0"
+    "puppeteer": "^2.0.0",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
