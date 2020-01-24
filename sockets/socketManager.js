@@ -1,4 +1,4 @@
-var socketIO = require('./index.js');
+var socketIO = require('../index.js');
 const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, COMMUNITY_CHAT, MESSAGE_RECEIVED, MESSAGE_SENT, TYPING, PRIVATE_MESSAGE} = require('./socketEvents')
 
 let connectedUsers = {}

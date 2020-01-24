@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const socketManager = require('./socketManager');
+const socketManager = require('./sockets/socketManager');
 
 require('dotenv').config();
 const db = require('./db').db;
