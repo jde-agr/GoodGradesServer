@@ -1,4 +1,9 @@
-const { app, server } = require('./socket');
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const socketManager = require('./socketManager');
+
 require('dotenv').config();
 const db = require('./db').db;
 const bodyParser = require('body-parser');
@@ -11,6 +16,10 @@ const Event = require('./models/Event');
 const QuickHelp = require('./models/QuickHelp');
 
 const { schema } = require('./schema/index');
+
+io.on('connection', socketManager);
+
+module.exports.io = io;
 
 app.use(bodyParser.json());
 
@@ -46,3 +55,4 @@ app.get('/', (req, res, next) => {
 
 const apiRoutes = require('./api/index')
 app.use('/api', apiRoutes.room, apiRoutes.user, apiRoutes.event, apiRoutes.quickHelp)
+
