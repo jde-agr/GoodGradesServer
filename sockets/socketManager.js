@@ -1,5 +1,5 @@
 var socketIO = require('../index.js');
-const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, COMMUNITY_CHAT, MESSAGE_RECEIVED, MESSAGE_SENT, TYPING, PRIVATE_MESSAGE} = require('./socketEvents')
+const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, QUICKHELP, QUICKHELPRESPONSE} = require('./socketEvents')
 
 let connectedUsers = {}
 
@@ -41,12 +41,14 @@ module.exports = function(socket){
 	})
 
 	socket.on(NOTIFICATION, (message, receiver)=>{
-		console.log(Message)
+		if (receiver === "tutor"){
+			socketIO.io.emit(QUICKHELP, message);
+		}
 		// console.log('Notification received and sending it to', receiver.user_name)
-		if (isUser(connectedUsers, receiver.unique_id) ){
+		else if (isUser(connectedUsers, receiver.unique_id)){
 			console.log("USER IS CONNECTED");
-			const receiverSocket = connectedUsers[receiver.user_name].socketId
-			socket.to(receiverSocket).emit(NOTIFICATION, message)
+			const receiverSocket = connectedUsers[receiver.unique_id].socketId
+			socket.to(receiverSocket).emit(QUICKHELPRESPONSE, message)
 		}
 	})
 }
@@ -55,7 +57,7 @@ function addUser(userList, user){
 	// console.log("Add user: ", user)
 	let newList = Object. assign({}, userList)
 	if (user)
-		newList[user.name] = user
+		newList[user.unique_id] = user
 	return newList
 }
 
@@ -72,9 +74,9 @@ function isUser(userList, unique_id){
 function displayConnectedUsers(){
 	if (Object.keys(connectedUsers).length > 0){
 		console.log("Connected Users:");
-		for (let elm in connectedUsers) {
-			console.log("-", elm.user.givenName, elm.user.unique_id);
-		}
+		// for (let elm in connectedUsers) {
+		// 	console.log("-", elm.user.givenName, elm.user.unique_id);
+		// }
 	}
 	else{
 		console.log("------No users are connected------")
