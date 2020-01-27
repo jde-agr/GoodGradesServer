@@ -59,7 +59,7 @@ router.get('/quickHelp/booked', async (req, res) => {
 
 router.post('/quickHelp/createQuickHelp', async (req, res) => {
     const objee = req.body;
-    if (objee.student_id && objee.tutor_id) {
+    if (objee.student_id) {
         const query = `
             mutation($student_id: String!) {
                 createQuickHelp(student_id: $student_id) {
@@ -131,7 +131,7 @@ router.post('/quickHelp/addTutorToQuickHelp', async (req, res) => {
 
 router.post('/quickHelp/deleteQuickHelp', async (req, res) => {
     const objee = req.body;
-    if (objee.student_id && objee.tutor_id) {
+    if (objee.student_id) {
         const query = `
             mutation($student_id: String!) {
                 deleteQuickHelp(student_id: $student_id) {
