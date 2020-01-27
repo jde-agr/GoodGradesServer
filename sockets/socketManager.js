@@ -1,5 +1,5 @@
 var socketIO = require('../index.js');
-const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, QUICKHELP, QUICKHELPRESPONSE} = require('./socketEvents')
+const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, QUICKHELP, QUICKHELPRESPONSE, RELOAD_DATA} = require('./socketEvents')
 
 let connectedUsers = {}
 
@@ -50,6 +50,23 @@ module.exports = function(socket){
 			const receiverSocket = connectedUsers[receiver.unique_id].socketId
 			socket.to(receiverSocket).emit(QUICKHELPRESPONSE, message)
 		}
+	})
+
+	socket.on(RELOAD_DATA, (message, receiver)=>{
+		if (receiver === "student"){
+			console.log(message);
+			socketIO.io.emit(RELOAD_DATA, message);
+		}
+		if (receiver === "tutor"){
+			console.log(message);
+			socketIO.io.emit(RELOAD_DATA, message);
+		}
+		// console.log('Notification received and sending it to', receiver.user_name)
+		// else if (isUser(connectedUsers, receiver.unique_id)){
+		// 	console.log("USER IS CONNECTED");
+		// 	const receiverSocket = connectedUsers[receiver.unique_id].socketId
+		// 	socket.to(receiverSocket).emit(QUICKHELPRESPONSE, message)
+		// }
 	})
 }
 
