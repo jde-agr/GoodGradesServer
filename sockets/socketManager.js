@@ -1,5 +1,5 @@
 var socketIO = require('../index.js');
-const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, QUICKHELP, QUICKHELPRESPONSE, RELOAD_DATA} = require('./socketEvents')
+const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, RECEIVEQUICKHELP, QUICKHELPRESPONSE, RELOAD_DATA} = require('./socketEvents')
 
 let connectedUsers = {}
 
@@ -41,8 +41,10 @@ module.exports = function(socket){
 	})
 
 	socket.on(NOTIFICATION, (message, receiver)=>{
+		console.log("NOTIFICATION CAUGHT")
 		if (receiver === "tutor"){
-			socketIO.io.emit(QUICKHELP, message);
+			console.log("QUICKHELP BEING SENT TO ALL TUTORS")
+			socketIO.io.emit(RECEIVEQUICKHELP, message);
 		}
 		// console.log('Notification received and sending it to', receiver.user_name)
 		else if (isUser(connectedUsers, receiver.unique_id)){
