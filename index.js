@@ -1,9 +1,13 @@
 const express = require('express');
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const socketManager = require('./sockets/socketManager');
+
 require('dotenv').config();
+const db = require('./db').db;
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
-const db = require('./db').db;
 const cors = require('cors');
 
 const Room = require('./models/Room');
@@ -12,6 +16,10 @@ const Event = require('./models/Event');
 const QuickHelp = require('./models/QuickHelp');
 
 const { schema } = require('./schema/index');
+
+io.on('connection', socketManager);
+
+module.exports.io = io;
 
 app.use(bodyParser.json());
 
@@ -37,7 +45,7 @@ app.use('/graphql', bodyParser.json(), graphqlHttp({
 
 port = process.env.PORT || 5000;
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log('Listening on port ' + port);
 })
 
@@ -47,3 +55,4 @@ app.get('/', (req, res, next) => {
 
 const apiRoutes = require('./api/index')
 app.use('/api', apiRoutes.room, apiRoutes.user, apiRoutes.event, apiRoutes.quickHelp)
+
