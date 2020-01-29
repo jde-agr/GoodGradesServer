@@ -1,5 +1,5 @@
 var socketIO = require('../index.js');
-const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, RECEIVEQUICKHELP, QUICKHELPRESPONSE, RELOAD_DATA} = require('./socketEvents')
+const {NOTIFICATION, VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED, LOGOUT, RECEIVEQUICKHELP, QUICKHELPRESPONSE, RELOAD_DATA, UPDATEQUICKHELP} = require('./socketEvents')
 
 let connectedUsers = {}
 
@@ -50,7 +50,9 @@ module.exports = function(socket){
 		else if (isUser(connectedUsers, receiver.unique_id)){
 			console.log("USER IS CONNECTED");
 			const receiverSocket = connectedUsers[receiver.unique_id].socketId
+			message.room_code = receiver.roomCode
 			socket.to(receiverSocket).emit(QUICKHELPRESPONSE, message)
+			socketIO.io.emit(UPDATEQUICKHELP, message);
 		}
 	})
 
