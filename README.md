@@ -2,7 +2,24 @@
 
 ## Summary
 
-The server for Good Grades which currently manages server side api calls that are used by the client.
+This is the server for Good Grades which currently manages server side api calls that are used by the client (https://github.com/Onex101/GoodGrades).
+
+
+## Project Objectives
+
+* Solving the problem of poor effectiveness when tutoring in person (offline) in a way that is cost effective and beneficial to both the student and tutor (**main objective**)
+
+* Creating a web application that can allow a tutor and student to connect (online) and have tutoring sessions done remotely (**accessibility**)
+
+* Having a means to distinguish between a student and a tutor and the different functionalities they have access to (**user management**, **user roles**)
+
+* Enabling a tutor and student to easily maneuver around the application (**intuitive**, **UI/UX**)
+
+* Simplify the process of making/booking tutoring sessions, as well as having an overview of tutor sessions that are open/booked (**views**, **filtering**)
+
+* Dynamic data is necessary in order to have accurate indications of when a slot has been made/has been booked (**web sockets**)
+
+* Please feel free to look at the [project proposal](./resources/WeThinkCode_Request_for_proposal.pdf) given to us for this project (Note: We have blacked out contact details for the sake of privacy)
 
 ## Prerequisites
 You will need the following in order to help install and configure all the necessary packages and database setup.
@@ -26,9 +43,9 @@ Within the shell, we create a database for our project called **good_grades**, a
 >
 
 ```sh
-$ CREATE DATABASE the_watchers;
-$ CREATE USER the_watchers_user WITH ENCRYPTED PASSWORD 'p@ssword1';
-$ GRANT ALL PRIVILEGES ON DATABASE the_watchers TO the_watchers_user;
+$ CREATE DATABASE good_grades;
+$ CREATE USER good_grades_user WITH ENCRYPTED PASSWORD 'p@ssword1';
+$ GRANT ALL PRIVILEGES ON DATABASE good_grades TO good_grades_user;
 ```
 
 You can now exit the PostgreSQL shell using the command
@@ -68,13 +85,14 @@ We need to install all the dependencies by using the command
 $ npm install
 ```
 
-Once all the denpendencies have been installed, we can proceed to running the actual server by using the command
+Once all the dependencies have been installed, we can proceed to running the actual server by using the command
 ```sh
 $ npm start
 ```
+The server will run on port **5000** when run on **localhost**
 
 ### Client Side
-The client side is kept on a seperate repo (https://github.com/Onex101/GoodGrades). Please refer to it's README file.
+The client side is kept in a seperate repo (https://github.com/Onex101/GoodGrades). Please refer to it's README file.
 
 ### Testing
 We made use of GraphQL's popular GUI called **GraphiQL** in order to test our queries and mutations that would occur (CRUD).
@@ -85,3 +103,6 @@ See below the url we insert in the browser (i.e. Chrome)
 ```
 http://localhost:5000/graphql
 ```
+
+Below is an image of what the GraphiQL GUI looks like
+![Screenshot](./resources/graphiql.png)

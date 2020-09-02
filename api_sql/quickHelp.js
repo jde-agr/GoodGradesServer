@@ -11,6 +11,10 @@ tutor_username
 createdAt
 `
 
+/*
+    GET request
+    retrieve all the quickhelps in the database
+*/
 router.get('/quickHelp', async (req, res) => {
     const objee = req.query;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -32,6 +36,10 @@ router.get('/quickHelp', async (req, res) => {
     res.send(ans.data.getAllQuickHelp);
 })
 
+/*
+    GET request
+    retrieve all the booked quickhelps
+*/
 router.get('/quickHelp/booked', async (req, res) => {
     const objee = req.params;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -57,6 +65,10 @@ router.get('/quickHelp/booked', async (req, res) => {
     }
 })
 
+/*
+    POST request
+    create a quickhelp
+*/
 router.post('/quickHelp/createQuickHelp', async (req, res) => {
     const objee = req.body;
     if (objee.student_id) {
@@ -93,6 +105,10 @@ router.post('/quickHelp/createQuickHelp', async (req, res) => {
         res.send({ message: "Failed to create QuickHelp. Require student_id." })
 })
 
+/*
+    POST request
+    add a tutor to a specific quickhelp
+*/
 router.post('/quickHelp/addTutorToQuickHelp', async (req, res) => {
     const objee = req.body;
     if (objee.student_id && objee.tutor_id) {
@@ -129,6 +145,10 @@ router.post('/quickHelp/addTutorToQuickHelp', async (req, res) => {
         res.send({ message: "Failed to add tutor to QuickHelp. Require student_id and tutor_id." })
 })
 
+/*
+    POST request
+    delete a specific quickhelp
+*/
 router.post('/quickHelp/deleteQuickHelp', async (req, res) => {
     const objee = req.body;
     if (objee.student_id) {

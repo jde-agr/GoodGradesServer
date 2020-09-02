@@ -1,5 +1,9 @@
 exports.eventResolvers = {
     Query: {
+        /*
+        Getting all Events from the database, filterable by tutor, student,
+        and booked status
+        */
         getAllEvents: async (root, args, { pgPool }) => {
             let query = ""
             args.tutor ? query += `"tutor" = '${ args.tutor}' ` : 0;
@@ -13,6 +17,10 @@ exports.eventResolvers = {
             ).then(res => { return res.rows })
             return allEvents;
         },
+        /*
+        Getting a single Event by using the combination of tutor and start_time to uniquely
+        identify the event
+        */
         getEvent: async (root, { tutor, start_time }, { pgPool }) => {
             const event = await pgPool.query(`
                 SELECT * FROM "Events" WHERE "tutor" = $1 AND "start_time" = $2
@@ -20,6 +28,9 @@ exports.eventResolvers = {
             return await event;
         }
     },
+    /*
+    Creating an Event whereby tutor, start_time and end_time are required
+    */
     Mutation: {
         createEvent: async (root, { tutor, start_time, end_time }, { pgPool }) => {
             const tutorDetails =  await pgPool.query(`
@@ -39,6 +50,10 @@ exports.eventResolvers = {
             }
             return null;
         },
+        /*
+        Adding a student to an Event. Tutor and start_time are used to uniquely
+        identify the event and the student_id is used to link the student to the event
+        */
         addStudentToEvent: async (root, { tutor, start_time, student_id }, { pgPool }) => {
             let event =  await pgPool.query(`
                 SELECT * FROM "Events" WHERE "tutor" = $1 AND "start_time" = $2
@@ -47,7 +62,6 @@ exports.eventResolvers = {
                 SELECT * FROM "Users" WHERE "unique_id" = $1
             `,[student_id]).then(res => { return res.rows[0] })
             if (event && student) {
-                console.log(event)
                 let newObj = await {...event}
                 if (!newObj.booked) {
                     if (newObj.students.length == 0 || newObj.students.filter(data => (data.unique_id == student_id)).length == 0) {
@@ -62,6 +76,10 @@ exports.eventResolvers = {
             }
             return await event;
         },
+        /*
+        Updates an Event's start_time and end_time, however the tutor and old_start_time are needed in order
+        to uniquely identify the event
+        */
         updateEvent: async (root, { tutor, old_start_time, new_start_time, new_end_time }, { pgPool }) => {
             const updatedEvent = await pgPool.query(`
                             UPDATE "Events" SET "start_time" = $1, "end_time" = $2 WHERE "tutor" = $3 AND "start_time" = $4
@@ -69,8 +87,11 @@ exports.eventResolvers = {
                         `, [new_start_time, new_end_time, tutor, old_start_time]).then(res => { return res.rows[0] })
             return updatedEvent;
         },
+        /*
+        Deletes an Event. The tutor and start_time are needed in order
+        to uniquely identify the event to be deleted
+        */
         deleteEvent: async (root, { tutor, start_time }, { pgPool }) => {
-            // const deletedEvent = await Event.findOneAndRemove({ tutor, start_time });
             const deletedEvent = await pgPool.query(`
                 DELETE FROM "Events" WHERE "tutor" = $1 AND "start_time" = $2
                 RETURNING *

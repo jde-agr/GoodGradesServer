@@ -1,15 +1,17 @@
 exports.quickHelpResolvers = {
     Query: {
+        /*
+        Get all QuickHelp from the database. It is filterable by student_id,
+        and tutor_id
+        */
         getAllQuickHelp: async (root, args, { pgPool }) => {
             let query = ""
             args.student_id ? query += `"student_id" = '${ args.student_id}' ` : 0;
             args.tutor_id ? query ? query += `AND "tutor_id" = '${args.tutor_id}' ` : query += `"tutor_id" = '${args.tutor_id}' ` : 0;
             query = query ? "WHERE " + query + " " : query
-            console.log(query)
             const allQuickHelp = await pgPool.query(`
                 SELECT * FROM "QuickHelps" ${query}ORDER BY "createdAt" ASC
             `).then(res => { return res.rows })
-            console.log(allQuickHelp)
             const studentDetails = await pgPool.query(`
                 SELECT * FROM "Users" ORDER BY "unique_id" ASC
             `).then(res => { return res.rows })
@@ -34,6 +36,9 @@ exports.quickHelpResolvers = {
             return await allQuickHelp;
         }
     },
+    /*
+    Creates a QuickHelp, using the student_id to uniquely identify it
+    */
     Mutation: {
         createQuickHelp: async (root, { student_id }, { pgPool }) => {
             const studentDetails = await pgPool.query(`
@@ -49,11 +54,14 @@ exports.quickHelpResolvers = {
                 return newQuickHelp;
             }
         },
+        /*
+        Assigns a tutor (tutor_id) to the QuickHelp that is uniquely identified by the
+        student_id
+        */
         addTutorToQuickHelp: async (root, { student_id, tutor_id }, { pgPool }) => {
             const oneTutor = await pgPool.query(`
                 SELECT * FROM "Users" WHERE "unique_id" = $1
             `, [ tutor_id ]).then(res => { return res.rows[0] })
-            console.log(oneTutor)
             if (oneTutor) {
                 const oneStudent = await pgPool.query(`
                     SELECT * FROM "Users" WHERE "unique_id" = $1
@@ -75,6 +83,9 @@ exports.quickHelpResolvers = {
                 }
             }
         },
+        /*
+        Deletes the QuickHelp uniquely identified by student_id
+        */
         deleteQuickHelp: async (root, { student_id }, { pgPool }) => {
             const deletedQuickHelp = await pgPool.query(`
                 DELETE FROM "QuickHelps" WHERE "student_id" = $1

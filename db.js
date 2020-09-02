@@ -1,7 +1,11 @@
 require('dotenv').config();
 
+/*
+We make use of the .env file to toggle between
+PostgreSQL and MongoDB
+For the sake of local testing, IS_SQL is set to "true"
+*/
 if (process.env.IS_SQL === "true") {
-    console.log("YE")
     const pg = require('pg')
     const db = new pg.Pool({ 
         host : 'localhost',
@@ -46,7 +50,6 @@ if (process.env.IS_SQL === "true") {
     }
 
 } else {
-    console.log("NO")
     const mongoose = require('mongoose');
 
     const db = mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_URI}/room-gen?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(conn => {

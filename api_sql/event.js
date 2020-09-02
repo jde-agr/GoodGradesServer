@@ -17,6 +17,10 @@ end_time
 booked
 `
 
+/*  
+    GET request
+    retrieve all events in the database 
+*/
 router.get('/events', async (req, res) => {
     const objee = req.query;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -38,6 +42,10 @@ router.get('/events', async (req, res) => {
     res.send(ans.data.getAllEvents);
 })
 
+/*
+    GET request
+    retrieve all available events
+*/
 router.get('/events/available', async (req, res) => {
     const objee = req.query;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -59,6 +67,10 @@ router.get('/events/available', async (req, res) => {
     res.send(ans.data.getAllEvents);
 })
 
+/*
+    GET request
+    retrieve all the events belonging to a specific tutor
+*/
 router.get('/events/byTutor/:tutor', async (req, res) => {
     const objee = req.params;
     if (objee.tutor) {
@@ -88,6 +100,10 @@ router.get('/events/byTutor/:tutor', async (req, res) => {
     }
 })
 
+/*
+    GET request
+    retrieve all the booked events belonging to a specific tutor
+*/
 router.get('/events/byTutor/:tutor/booked', async (req, res) => {
     const objee = req.params;
     if (objee.tutor) {
@@ -117,6 +133,10 @@ router.get('/events/byTutor/:tutor/booked', async (req, res) => {
     }
 })
 
+/*
+    GET request
+    retrieve all the available events belonging to a specific tutor
+*/
 router.get('/events/byTutor/:tutor/available', async (req, res) => {
     const objee = req.params;
     if (objee.tutor) {
@@ -146,6 +166,10 @@ router.get('/events/byTutor/:tutor/available', async (req, res) => {
     }
 })
 
+/*
+    GET request
+    retrieve all the events booked by a specific student
+*/
 router.get('/events/byStudent/:student', async (req, res) => {
     const objee = req.params;
     if (objee.student) {
@@ -175,6 +199,10 @@ router.get('/events/byStudent/:student', async (req, res) => {
     }
 })
 
+/*
+    POST request
+    create an event
+*/
 router.post('/events/createEvent', async (req, res) => {
     const objee = req.body;
     const existingID =  await pgPool.query(`
@@ -222,6 +250,10 @@ router.post('/events/createEvent', async (req, res) => {
         res.send({ message: "Failed to add Event. User is not of type tutor." })
 })
 
+/*
+    POST request
+    add a student to a specific event
+*/
 router.post('/events/addStudentToEvent', async (req, res) => {
     const objee = req.body;
     if (objee.tutor && objee.start_time && objee.student_id) {
@@ -262,6 +294,10 @@ router.post('/events/addStudentToEvent', async (req, res) => {
         res.send({ message: "Failed to add Student to Event. Require tutor, start_time and student_id." })
 })
 
+/*
+    POST request
+    update the times for a specific event
+*/
 router.post('/events/updateEvent', async (req, res) => {
     const objee = req.body;
     if (objee.tutor && objee.old_start_time && objee.new_start_time && objee.new_end_time) {
@@ -302,6 +338,10 @@ router.post('/events/updateEvent', async (req, res) => {
         res.send({ message: "Failed to update Event. Require tutor, old_start_time, new_start_time and new_end_time." })
 })
 
+/*
+    POST request
+    delete a specific event
+*/
 router.post('/events/deleteEvent', async (req, res) => {
     const objee = req.body;
     if (objee.tutor && objee.start_time) {

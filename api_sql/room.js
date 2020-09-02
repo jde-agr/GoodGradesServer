@@ -11,6 +11,10 @@ room_url
 room_code
 `
 
+/*
+    GET request
+    retrieve all rooms in the database
+*/
 router.get('/rooms', async (req, res) => {
     const objee = req.query;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -32,6 +36,10 @@ router.get('/rooms', async (req, res) => {
     res.send(ans.data.getAllRooms);
 })
 
+/*
+    GET request
+    retrieve a specific room
+*/
 router.get('/rooms/:unique_id', async (req, res) => {
     const objee = req.params;
     if (objee.unique_id) {
@@ -61,6 +69,10 @@ router.get('/rooms/:unique_id', async (req, res) => {
     }
 })
 
+/*
+    GET request
+    check whether a room exists or not
+*/
 router.get('/rooms/check/:room_code', async (req, res) => {
     const objee = await req.params;
     if (objee.room_code) {
@@ -77,13 +89,16 @@ router.get('/rooms/check/:room_code', async (req, res) => {
     }
 })
 
+/*
+    POST request
+    create a room
+*/
 router.post('/rooms/createRoom', async (req, res) => {
     const objee = req.body;
     if (objee.unique_id) {
         const existingID = await pgPool.query(`
                 SELECT * FROM "Rooms" WHERE "unique_id" = $1
             `, [ objee.unique_id ]).then(res => { return res.rows[0] })
-        console.log(existingID)
         if (!existingID) {
             var room_url = "";
             var room_code = "";
@@ -112,7 +127,6 @@ router.post('/rooms/createRoom', async (req, res) => {
                     }
                 `;
                 const variables = `{ "unique_id": "${objee.unique_id}", "room_url": "${room_url}", "room_code": "${room_code}" }`;
-                console.log(variables)
                 return (fetch(GRAPHQL_API, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -123,14 +137,12 @@ router.post('/rooms/createRoom', async (req, res) => {
                         'content-type': 'application/json'
                     }
                 }).then(response => response.json())).then(result => {
-                    console.log(result)
                     if (result.data.createRoom) {
                         res.send(result.data.createRoom)
                     } else {
                         res.send({ message: "Failed to add Room" })
                     }
                 })
-                // await res.send({ "room_url": `${room_name}`, "room_code": `${room_code}` })
             })().catch((e) => { console.log(e) });
         } else {
             res.send({ message: "Failed to add Room. Unique_id already exists." })

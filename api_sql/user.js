@@ -11,6 +11,10 @@ username
 type
 `
 
+/*
+    GET request
+    retrieves all users within the database
+*/
 router.get('/users', async (req, res) => {
     const objee = req.query;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -32,6 +36,10 @@ router.get('/users', async (req, res) => {
     res.send(ans.data.getAllUsers);
 })
 
+/*
+    GET request
+    retrieve a specific user
+*/
 router.get('/users/:unique_id', async (req, res) => {
     const objee = req.params;
     if (objee.unique_id) {
@@ -61,6 +69,10 @@ router.get('/users/:unique_id', async (req, res) => {
     }
 })
 
+/*
+    GET request
+    retrieve a specific user's room details
+*/
 router.get('/users/:unique_id/room', async (req, res) => {
     const objee = req.params;
     if (objee.unique_id) {
@@ -101,6 +113,10 @@ router.get('/users/:unique_id/room', async (req, res) => {
     }
 })
 
+/*
+    GET request
+    retrieve all users that are tutors
+*/
 router.get('/users/tutor/getAllTutors', async (req, res) => {
     const objee = req.query;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -122,6 +138,10 @@ router.get('/users/tutor/getAllTutors', async (req, res) => {
     res.send(ans.data.getAllTutors);
 })
 
+/*
+    GET request
+    retrieve all users who are tutors and their corresponding events
+*/
 router.get('/users/tutor/getAllTutors/events', async (req, res) => {
     const objee = req.query;
     const fields = ((objee && objee.fields) ? objee.fields : default_fields)
@@ -155,13 +175,16 @@ router.get('/users/tutor/getAllTutors/events', async (req, res) => {
     res.send(ans.data.getAllTutors);
 })
 
+/*
+    POST request
+    create a user
+*/
 router.post('/users/createUser', async (req, res) => {
     const objee = req.body;
     if (objee.unique_id && objee.username && objee.type) {
         const existingID =  await pgPool.query(`
                 SELECT * FROM "Users" WHERE "unique_id" = $1
             `,[objee.unique_id]).then(res => { return res.rows[0] })
-        console.log(existingID)
         if (!existingID) {
             if (objee.type === "tutor") {
                 let room_url = "";
@@ -252,18 +275,20 @@ router.post('/users/createUser', async (req, res) => {
         res.send({ message: "Failed to add User. Require unique_id, username and type." })
 })
 
+/*
+    POST request
+    delete a specific user
+*/
 router.post('/users/deleteUser/:unique_id', async (req, res) => {
     objee = req.params;
     if (objee.unique_id) {
         const existingID =  await pgPool.query(`
                 SELECT * FROM "Users" WHERE "unique_id" = $1
             `,[objee.unique_id]).then(res => { return res.rows[0] })
-        console.log(existingID)
         if (existingID) {
             const existingRoom = await pgPool.query(`
                 SELECT * FROM "Rooms" WHERE "unique_id" = $1
             `, [ objee.unique_id ]).then(res => { return res.rows[0] })
-            console.log(existingRoom)
             let query = `
                 mutation($unique_id: String!) {
                     deleteUser(unique_id: $unique_id) {
