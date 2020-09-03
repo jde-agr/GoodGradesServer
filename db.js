@@ -41,7 +41,7 @@ if (process.env.IS_SQL === "true") {
         "booked" BOOLEAN NOT NULL, 
         "expireAt" TIMESTAMP WITH TIME ZONE NOT NULL, 
         PRIMARY KEY ("tutor", "start_time"));
-    `)
+    `).catch((err) => console.log(err))
 
     const { schema } = require('./schema_sql/index');
 
