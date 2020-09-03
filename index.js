@@ -5,17 +5,12 @@ const io = require('socket.io')(server);
 const socketManager = require('./sockets/socketManager');
 
 require('dotenv').config();
-const db = require('./db').db;
+
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const cors = require('cors');
 
-const Room = require('./models/Room');
-const User = require('./models/User');
-const Event = require('./models/Event');
-const QuickHelp = require('./models/QuickHelp');
-
-const { schema } = require('./schema/index');
+const { db, Room, User, Event, QuickHelp, schema } = require("./db");
 
 io.on('connection', socketManager);
 
@@ -37,7 +32,9 @@ app.use(cors(corsOptions));
 
 app.use('/graphql', bodyParser.json(), graphqlHttp({
     schema: schema,
-    context: {
+    context: (process.env.IS_SQL === "true") ? {
+        pgPool : db
+    } : {
         Room, User, Event, QuickHelp
     },
     graphiql: true
@@ -53,6 +50,5 @@ app.get('/', (req, res, next) => {
     res.sendFile('views/index.html', { root: '.' });
 });
 
-const apiRoutes = require('./api/index')
+const apiRoutes = (process.env.IS_SQL === "true") ? require('./api_sql/index') :  require('./api/index')
 app.use('/api', apiRoutes.room, apiRoutes.user, apiRoutes.event, apiRoutes.quickHelp)
-
