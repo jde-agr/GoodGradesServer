@@ -7,7 +7,7 @@ exports.eventResolvers = {
         getAllEvents: async (root, args, { pgPool }) => {
             let query = ""
             args.tutor ? query += `"tutor" = '${ args.tutor}' ` : 0;
-            args.student ? query ? query += `AND "students" -> 'unique_id' = '${args.student}' ` : query += `students -> 'unique_id' = '${args.student}' ` : 0;
+            args.student ? query ? query += `AND "students" @> '[{"unique_id" : "${args.student}"}]' ` : query += `"students" @> '[{"unique_id" : "${args.student}"}]' ` : 0;
             (args.booked == true) ? 
             (query ? query += `AND "booked" = 'true' ` : query += `"booked" = 'true' `) : 
             (args.booked == false) ? (query ? query += `AND "booked" = 'false' ` : query += `"booked" = 'false' `): 0;
